@@ -13,9 +13,10 @@ export async function GET(request: NextRequest) {
   try {
     const sql = getSQL();
     const rows = await sql`
-      SELECT id, lake_slug, image_url, caption, tags, created_at
+      SELECT id, lake_slug, image_url, caption, tags, created_at, expires_at
       FROM posts
       WHERE lake_slug = ${lake}
+        AND expires_at > now()
       ORDER BY created_at DESC
       LIMIT 50
     `;
@@ -45,9 +46,9 @@ export async function POST(request: NextRequest) {
 
     const sql = getSQL();
     const rows = await sql`
-      INSERT INTO posts (lake_slug, image_url, caption, tags)
-      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags})
-      RETURNING id, lake_slug, image_url, caption, tags, created_at
+      INSERT INTO posts (lake_slug, image_url, caption, tags, expires_at)
+      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags}, now() + INTERVAL '7 days')
+      RETURNING id, lake_slug, image_url, caption, tags, created_at, expires_at
     `;
 
     return NextResponse.json(rows[0], { status: 201 });
