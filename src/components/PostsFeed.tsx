@@ -58,7 +58,23 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard
+            key={post.id}
+            post={post}
+            onDelete={async () => {
+              if (!confirm("Delete this post?")) return;
+              try {
+                const res = await fetch(`/api/posts/${post.id}`, {
+                  method: "DELETE",
+                });
+                if (res.ok) {
+                  setPosts((prev) => prev.filter((p) => p.id !== post.id));
+                }
+              } catch {
+                // silent fail
+              }
+            }}
+          />
         ))}
       </div>
     </div>

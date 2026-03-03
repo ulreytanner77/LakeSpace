@@ -16,7 +16,7 @@ const TAG_COLORS: Record<string, string> = {
   crowded: "bg-rose-100 text-rose-700",
 };
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post, onDelete }: { post: Post; onDelete?: () => void }) {
   const date = new Date(post.created_at);
   const timeAgo = getTimeAgo(date);
 
@@ -49,7 +49,17 @@ export default function PostCard({ post }: { post: Post }) {
             ))}
           </div>
         )}
-        <p className="text-xs text-gray-400">{timeAgo}</p>
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-gray-400">{timeAgo}</p>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="text-xs text-red-400 hover:text-red-600 transition-colors"
+            >
+              Delete
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
