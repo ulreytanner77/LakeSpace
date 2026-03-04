@@ -41,7 +41,7 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
       <NewPostForm lakeSlug={lakeSlug} onPosted={fetchPosts} />
 
       {loading && (
-        <p className="text-sm text-gray-400 text-center py-8">
+        <p className="text-sm text-sand-300 text-center py-8">
           Loading posts...
         </p>
       )}
@@ -51,7 +51,7 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
       )}
 
       {!loading && !error && posts.length === 0 && (
-        <p className="text-sm text-gray-400 text-center py-8">
+        <p className="text-sm text-sand-300 text-center py-8">
           No posts yet. Be the first to share!
         </p>
       )}

@@ -10,10 +10,10 @@ interface Post {
 }
 
 const TAG_COLORS: Record<string, string> = {
-  windy: "bg-sky-100 text-sky-700",
-  glassy: "bg-emerald-100 text-emerald-700",
-  choppy: "bg-amber-100 text-amber-700",
-  crowded: "bg-rose-100 text-rose-700",
+  windy: "bg-lake-500/15 text-lake-600",
+  glassy: "bg-forest-500/15 text-forest-600",
+  choppy: "bg-sunset-500/15 text-sunset-600",
+  crowded: "bg-sand-300/40 text-sand-400",
 };
 
 export default function PostCard({ post, onDelete }: { post: Post; onDelete?: () => void }) {
@@ -21,7 +21,7 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
   const timeAgo = getTimeAgo(date);
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm">
+    <div className="rounded-2xl border border-sand-200 bg-sand-100 overflow-hidden shadow-sm animate-fade-in">
       <div className="relative w-full aspect-[4/3]">
         <Image
           src={post.image_url}
@@ -33,7 +33,7 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
       </div>
       <div className="p-4">
         {post.caption && (
-          <p className="text-gray-800 text-sm mb-2">{post.caption}</p>
+          <p className="text-stone-700 text-sm mb-2">{post.caption}</p>
         )}
         {post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-2">
@@ -41,7 +41,7 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
               <span
                 key={tag}
                 className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                  TAG_COLORS[tag] || "bg-gray-100 text-gray-600"
+                  TAG_COLORS[tag] || "bg-sand-200 text-sand-400"
                 }`}
               >
                 {tag}
@@ -50,7 +50,7 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
           </div>
         )}
         <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-400">{timeAgo}</p>
+          <p className="text-xs text-sand-300">{timeAgo}</p>
           {onDelete && (
             <button
               onClick={onDelete}

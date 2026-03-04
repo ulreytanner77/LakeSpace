@@ -13,10 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900 min-h-screen">
-        <header className="border-b border-gray-200 bg-white">
+      <body className="bg-sand-50 text-stone-800 min-h-screen">
+        <header className="bg-forest-700 shadow-md">
           <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="/lakes" className="text-lg font-bold text-blue-600">
+            <a href="/lakes" className="text-xl font-extrabold text-sand-50 hover:text-sunset-400 transition-colors">
               Lake Space
             </a>
           </div>

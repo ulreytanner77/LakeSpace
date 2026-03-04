@@ -56,17 +56,17 @@ export default function ChatTab({ lakeSlug, isActive }: ChatTabProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-gray-500">Chat</h3>
+        <h3 className="text-sm font-medium text-sand-400">Chat</h3>
         <button
           onClick={fetchMessages}
-          className="text-xs text-blue-500 hover:text-blue-700 font-medium transition-colors"
+          className="text-xs text-lake-500 hover:text-lake-600 font-medium transition-colors"
         >
           Refresh
         </button>
       </div>
 
       {loading && (
-        <p className="text-sm text-gray-400 text-center py-8">
+        <p className="text-sm text-sand-300 text-center py-8">
           Loading messages...
         </p>
       )}

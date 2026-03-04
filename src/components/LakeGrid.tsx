@@ -8,11 +8,11 @@ export default function LakeGrid() {
         <Link
           key={lake.slug}
           href={`/lakes/${lake.slug}`}
-          className="block rounded-xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-300 transition-all"
+          className="block rounded-2xl border border-sand-200 bg-sand-100 p-5 shadow-sm hover:shadow-md hover:border-sunset-400 hover:-translate-y-0.5 transition-all"
         >
-          <h2 className="text-lg font-semibold text-gray-900">{lake.name}</h2>
-          <p className="text-sm text-blue-600 mt-0.5">{lake.region}</p>
-          <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+          <h2 className="text-lg font-semibold text-stone-800">{lake.name}</h2>
+          <p className="text-sm text-sunset-500 mt-0.5">{lake.region}</p>
+          <p className="text-sm text-sand-400 mt-2 line-clamp-2">
             {lake.description}
           </p>
         </Link>

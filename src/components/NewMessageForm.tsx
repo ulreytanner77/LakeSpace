@@ -55,7 +55,7 @@ export default function NewMessageForm({
         placeholder="Name (optional)"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent"
         disabled={sending}
       />
       <div className="flex gap-2">
@@ -64,14 +64,14 @@ export default function NewMessageForm({
           placeholder="Type a message..."
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="flex-1 rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent"
           disabled={sending}
           required
         />
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="rounded-full bg-forest-500 px-4 py-2 text-sm font-medium text-white hover:bg-forest-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {sending ? "..." : "Send"}
         </button>

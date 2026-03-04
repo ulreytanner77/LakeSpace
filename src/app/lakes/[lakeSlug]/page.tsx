@@ -17,13 +17,13 @@ export default function LakePage() {
   if (!lake) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-xl font-bold text-gray-800 mb-2">
+        <h1 className="text-xl font-extrabold text-forest-700 mb-2">
           Lake not found
         </h1>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-sand-400 mb-4">
           We don&apos;t have a lake with that name.
         </p>
-        <Link href="/lakes" className="text-blue-500 hover:underline text-sm">
+        <Link href="/lakes" className="text-lake-500 hover:text-lake-600 text-sm">
           Back to lakes
         </Link>
       </div>
@@ -34,15 +34,15 @@ export default function LakePage() {
     <div>
       <Link
         href="/lakes"
-        className="text-sm text-blue-500 hover:underline mb-3 inline-block"
+        className="text-sm text-lake-500 hover:text-lake-600 mb-3 inline-block"
       >
         &larr; All Lakes
       </Link>
 
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">{lake.name}</h1>
-        <p className="text-sm text-blue-600">{lake.region}</p>
-        <p className="text-sm text-gray-500 mt-1">{lake.description}</p>
+        <h1 className="text-2xl font-extrabold text-forest-700">{lake.name}</h1>
+        <p className="text-sm text-sunset-500">{lake.region}</p>
+        <p className="text-sm text-sand-400 mt-1">{lake.description}</p>
       </div>
 
       <Tabs active={activeTab} onChange={setActiveTab} />

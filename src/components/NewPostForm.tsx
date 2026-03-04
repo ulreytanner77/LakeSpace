@@ -91,16 +91,16 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
+      className="rounded-2xl border border-sand-200 bg-sand-100 p-4 shadow-sm"
     >
-      <h3 className="text-sm font-semibold text-gray-700 mb-3">New Post</h3>
+      <h3 className="text-sm font-semibold text-stone-700 mb-3">New Post</h3>
 
       <input
         id="post-file-input"
         type="file"
         accept="image/*"
         onChange={(e) => setFile(e.target.files?.[0] || null)}
-        className="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 mb-3"
+        className="block w-full text-sm text-sand-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-forest-500/10 file:text-forest-600 hover:file:bg-forest-500/20 mb-3"
         disabled={isSubmitting}
         required
       />
@@ -110,7 +110,7 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
         placeholder="Caption (optional)"
         value={caption}
         onChange={(e) => setCaption(e.target.value)}
-        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+        className="w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent mb-3"
         disabled={isSubmitting}
       />
 
@@ -123,8 +123,8 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
             disabled={isSubmitting}
             className={`text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
               tags.includes(tag)
-                ? "bg-blue-500 text-white border-blue-500"
-                : "bg-white text-gray-600 border-gray-300 hover:border-blue-300"
+                ? "bg-forest-500 text-white border-forest-500"
+                : "bg-sand-50 text-stone-600 border-sand-200 hover:border-forest-500"
             }`}
           >
             {tag}
@@ -137,7 +137,7 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
       <button
         type="submit"
         disabled={!file || isSubmitting}
-        className="w-full rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full rounded-full bg-forest-500 px-4 py-2 text-sm font-medium text-white hover:bg-forest-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
       >
         {status === "uploading"
           ? "Uploading..."
