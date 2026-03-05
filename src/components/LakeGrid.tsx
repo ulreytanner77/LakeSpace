@@ -9,7 +9,7 @@ export default function LakeGrid() {
         <Link
           key={lake.slug}
           href={`/lakes/${lake.slug}`}
-          className={`block rounded-2xl border border-sand-200 bg-sand-100 shadow-sm hover:shadow-md hover:border-sunset-400 hover:-translate-y-0.5 transition-all overflow-hidden ${lake.image ? "" : "p-5"}`}
+          className={`block rounded-2xl border border-sand-200 bg-sand-100 shadow-sm hover:shadow-lg hover:border-sunset-400 hover:-translate-y-1 transition-all duration-200 overflow-hidden ${lake.image ? "" : "p-5"}`}
         >
           {lake.image && (
             <div className="relative w-full aspect-video">
