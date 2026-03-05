@@ -3,6 +3,7 @@ export interface Lake {
   name: string;
   region: string;
   description: string;
+  image?: string;
 }
 
 export const lakes: Lake[] = [
@@ -47,6 +48,7 @@ export const lakes: Lake[] = [
     region: "Southern Oregon",
     description:
       "A quiet hidden gem near Howard Prairie. Ideal for calm water sessions and smaller group hangouts.",
+    image: "/lakes/echo.jpg",
   },
   {
     slug: "fish-lake",
@@ -75,6 +77,7 @@ export const lakes: Lake[] = [
     region: "Southern Oregon",
     description:
       "Clear mountain water and beautiful surroundings. A summer favorite for paddleboarding, boating, and social lake days.",
+    image: "/lakes/lake-of-the-woods.jpg",
   },
 ];
 
