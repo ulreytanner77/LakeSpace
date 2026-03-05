@@ -3,16 +3,19 @@
 import { useState } from "react";
 
 const CONDITION_TAGS = ["windy", "glassy", "choppy", "crowded"];
+const ACTIVITIES = ["paddleboarding", "fishing", "kayaking"];
 
 interface NewPostFormProps {
   lakeSlug: string;
   onPosted: () => void;
+  activityCounts: Record<string, number>;
 }
 
-export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
+export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewPostFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [caption, setCaption] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [activity, setActivity] = useState<string | null>(null);
   const [status, setStatus] = useState<
     "idle" | "uploading" | "posting" | "error"
   >("idle");
@@ -59,6 +62,7 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
           image_url: url,
           caption: caption || null,
           tags,
+          activity,
         }),
       });
 
@@ -71,6 +75,7 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
       setFile(null);
       setCaption("");
       setTags([]);
+      setActivity(null);
       setStatus("idle");
 
       // Reset file input
@@ -128,6 +133,21 @@ export default function NewPostForm({ lakeSlug, onPosted }: NewPostFormProps) {
             }`}
           >
             {tag}
+          </button>
+        ))}
+        {ACTIVITIES.map((a) => (
+          <button
+            key={a}
+            type="button"
+            onClick={() => setActivity(activity === a ? null : a)}
+            disabled={isSubmitting}
+            className={`text-xs font-medium px-3 py-1 rounded-full border transition-colors ${
+              activity === a
+                ? "bg-forest-500 text-white border-forest-500"
+                : "bg-sand-50 text-stone-600 border-sand-200 hover:border-forest-500"
+            }`}
+          >
+            {a} ({activityCounts[a] || 0})
           </button>
         ))}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import PostCard from "./PostCard";
 import NewPostForm from "./NewPostForm";
 
@@ -10,6 +10,7 @@ interface Post {
   image_url: string;
   caption: string | null;
   tags: string[];
+  activity: string | null;
   created_at: string;
 }
 
@@ -36,9 +37,19 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
     fetchPosts();
   }, [fetchPosts]);
 
+  const activityCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const post of posts) {
+      if (post.activity) {
+        counts[post.activity] = (counts[post.activity] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [posts]);
+
   return (
     <div className="space-y-4">
-      <NewPostForm lakeSlug={lakeSlug} onPosted={fetchPosts} />
+      <NewPostForm lakeSlug={lakeSlug} onPosted={fetchPosts} activityCounts={activityCounts} />
 
       {loading && (
         <p className="text-sm text-sand-300 text-center py-8">

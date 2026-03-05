@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const sql = getSQL();
     const rows = await sql`
-      SELECT id, lake_slug, image_url, caption, tags, created_at, expires_at
+      SELECT id, lake_slug, image_url, caption, tags, activity, created_at, expires_at
       FROM posts
       WHERE lake_slug = ${lake}
         AND expires_at > now()
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { lake_slug, image_url, caption, tags } = body;
+    const { lake_slug, image_url, caption, tags, activity } = body;
 
     if (!lake_slug || !image_url) {
       return NextResponse.json(
@@ -43,12 +43,13 @@ export async function POST(request: NextRequest) {
     }
 
     const safeTags = Array.isArray(tags) ? tags : [];
+    const safeActivity = typeof activity === "string" ? activity : null;
 
     const sql = getSQL();
     const rows = await sql`
-      INSERT INTO posts (lake_slug, image_url, caption, tags, expires_at)
-      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags}, now() + INTERVAL '7 days')
-      RETURNING id, lake_slug, image_url, caption, tags, created_at, expires_at
+      INSERT INTO posts (lake_slug, image_url, caption, tags, activity, expires_at)
+      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags}, ${safeActivity}, now() + INTERVAL '7 days')
+      RETURNING id, lake_slug, image_url, caption, tags, activity, created_at, expires_at
     `;
 
     return NextResponse.json(rows[0], { status: 201 });
