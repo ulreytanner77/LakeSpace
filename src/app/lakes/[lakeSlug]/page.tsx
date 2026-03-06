@@ -9,6 +9,7 @@ import PostsFeed from "@/components/PostsFeed";
 import ChatTab from "@/components/ChatTab";
 import TripsTab from "@/components/TripsTab";
 import LiveActivity from "@/components/LiveActivity";
+import ActivityThisWeek from "@/components/ActivityThisWeek";
 
 export default function LakePage() {
   const params = useParams();
@@ -46,6 +47,8 @@ export default function LakePage() {
         <p className="text-sm text-sunset-500">{lake.region}</p>
         <p className="text-sm text-sand-400 mt-1">{lake.description}</p>
       </div>
+
+      <ActivityThisWeek lakeSlug={slug} />
 
       <LiveActivity lakeSlug={slug} />
 
