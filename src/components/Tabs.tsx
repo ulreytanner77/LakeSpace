@@ -1,8 +1,10 @@
 "use client";
 
+type TabValue = "posts" | "chat" | "trips";
+
 interface TabsProps {
-  active: "posts" | "chat";
-  onChange: (tab: "posts" | "chat") => void;
+  active: TabValue;
+  onChange: (tab: TabValue) => void;
 }
 
 export default function Tabs({ active, onChange }: TabsProps) {
@@ -27,6 +29,16 @@ export default function Tabs({ active, onChange }: TabsProps) {
         }`}
       >
         Chat
+      </button>
+      <button
+        onClick={() => onChange("trips")}
+        className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+          active === "trips"
+            ? "bg-forest-500 text-white shadow-sm"
+            : "text-stone-600 hover:bg-sand-100"
+        }`}
+      >
+        Trips
       </button>
     </div>
   );

@@ -7,12 +7,13 @@ import { getLakeBySlug } from "@/lib/lakes";
 import Tabs from "@/components/Tabs";
 import PostsFeed from "@/components/PostsFeed";
 import ChatTab from "@/components/ChatTab";
+import TripsTab from "@/components/TripsTab";
 
 export default function LakePage() {
   const params = useParams();
   const slug = params.lakeSlug as string;
   const lake = getLakeBySlug(slug);
-  const [activeTab, setActiveTab] = useState<"posts" | "chat">("posts");
+  const [activeTab, setActiveTab] = useState<"posts" | "chat" | "trips">("posts");
 
   if (!lake) {
     return (
@@ -49,8 +50,10 @@ export default function LakePage() {
 
       {activeTab === "posts" ? (
         <PostsFeed lakeSlug={slug} />
-      ) : (
+      ) : activeTab === "chat" ? (
         <ChatTab lakeSlug={slug} isActive={activeTab === "chat"} />
+      ) : (
+        <TripsTab lakeSlug={slug} />
       )}
     </div>
   );
