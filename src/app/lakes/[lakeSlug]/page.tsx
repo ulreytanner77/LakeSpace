@@ -56,7 +56,7 @@ export default function LakePage() {
       ) : activeTab === "chat" ? (
         <ChatTab lakeSlug={slug} isActive={activeTab === "chat"} />
       ) : (
-        <TripsTab lakeSlug={slug} />
+        <TripsTab lakeSlug={slug} lakeName={lake.name} />
       )}
     </div>
   );
