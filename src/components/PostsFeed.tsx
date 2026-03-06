@@ -4,6 +4,12 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import PostCard from "./PostCard";
 import NewPostForm from "./NewPostForm";
 
+interface LinkedTrip {
+  activity: string;
+  planned_date: string;
+  total_going: number;
+}
+
 interface Post {
   id: string;
   lake_slug: string;
@@ -12,9 +18,44 @@ interface Post {
   tags: string[];
   activity: string | null;
   created_at: string;
+  trip?: LinkedTrip | null;
 }
 
-export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
+interface RawPost {
+  id: string;
+  lake_slug: string;
+  image_url: string;
+  caption: string | null;
+  tags: string[];
+  activity: string | null;
+  created_at: string;
+  trip_id: number | null;
+  trip_activity: string | null;
+  trip_planned_date: string | null;
+  trip_group_size: number | null;
+  trip_join_count: number | null;
+}
+
+function mapPost(raw: RawPost): Post {
+  return {
+    id: raw.id,
+    lake_slug: raw.lake_slug,
+    image_url: raw.image_url,
+    caption: raw.caption,
+    tags: raw.tags,
+    activity: raw.activity,
+    created_at: raw.created_at,
+    trip: raw.trip_id && raw.trip_activity && raw.trip_planned_date != null
+      ? {
+          activity: raw.trip_activity,
+          planned_date: raw.trip_planned_date,
+          total_going: (raw.trip_group_size || 1) + (raw.trip_join_count || 0),
+        }
+      : null,
+  };
+}
+
+export default function PostsFeed({ lakeSlug, onSwitchToTrips }: { lakeSlug: string; onSwitchToTrips?: () => void }) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -23,8 +64,8 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
     try {
       const res = await fetch(`/api/posts?lake=${lakeSlug}`);
       if (!res.ok) throw new Error("Failed to fetch posts");
-      const data = await res.json();
-      setPosts(data);
+      const data: RawPost[] = await res.json();
+      setPosts(data.map(mapPost));
       setError("");
     } catch {
       setError("Could not load posts");
@@ -72,6 +113,7 @@ export default function PostsFeed({ lakeSlug }: { lakeSlug: string }) {
           <PostCard
             key={post.id}
             post={post}
+            onViewTrip={post.trip && onSwitchToTrips ? onSwitchToTrips : undefined}
             onDelete={async () => {
               if (!confirm("Delete this post?")) return;
               try {

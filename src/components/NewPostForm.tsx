@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CONDITION_TAGS = ["windy", "glassy", "choppy", "crowded"];
 const ACTIVITIES = ["paddleboarding", "fishing", "kayaking"];
@@ -11,15 +11,38 @@ interface NewPostFormProps {
   activityCounts: Record<string, number>;
 }
 
+interface TripOption {
+  id: number;
+  activity: string;
+  planned_date: string;
+}
+
+const ACTIVITY_ICONS: Record<string, string> = {
+  fishing: "🎣",
+  paddleboarding: "🏄",
+  swimming: "🏊",
+  kayaking: "🛶",
+  boating: "⛵",
+};
+
 export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewPostFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [caption, setCaption] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [activity, setActivity] = useState<string | null>(null);
+  const [tripId, setTripId] = useState<number | null>(null);
+  const [availableTrips, setAvailableTrips] = useState<TripOption[]>([]);
   const [status, setStatus] = useState<
     "idle" | "uploading" | "posting" | "error"
   >("idle");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch(`/api/trips?lake=${lakeSlug}`)
+      .then((res) => res.ok ? res.json() : [])
+      .then((data: TripOption[]) => setAvailableTrips(data))
+      .catch(() => setAvailableTrips([]));
+  }, [lakeSlug]);
 
   function toggleTag(tag: string) {
     setTags((prev) =>
@@ -63,6 +86,7 @@ export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewP
           caption: caption || null,
           tags,
           activity,
+          trip_id: tripId,
         }),
       });
 
@@ -76,6 +100,7 @@ export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewP
       setCaption("");
       setTags([]);
       setActivity(null);
+      setTripId(null);
       setStatus("idle");
 
       // Reset file input
@@ -151,6 +176,22 @@ export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewP
           </button>
         ))}
       </div>
+
+      {availableTrips.length > 0 && (
+        <select
+          value={tripId ?? ""}
+          onChange={(e) => setTripId(e.target.value ? Number(e.target.value) : null)}
+          disabled={isSubmitting}
+          className="w-full rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent mb-3"
+        >
+          <option value="">Link a trip (optional)</option>
+          {availableTrips.map((t) => (
+            <option key={t.id} value={t.id}>
+              {ACTIVITY_ICONS[t.activity] || "🌊"} {t.activity} — {new Date(t.planned_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+            </option>
+          ))}
+        </select>
+      )}
 
       {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
 

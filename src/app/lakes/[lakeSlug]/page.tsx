@@ -49,7 +49,7 @@ export default function LakePage() {
       <Tabs active={activeTab} onChange={setActiveTab} />
 
       {activeTab === "posts" ? (
-        <PostsFeed lakeSlug={slug} />
+        <PostsFeed lakeSlug={slug} onSwitchToTrips={() => setActiveTab("trips")} />
       ) : activeTab === "chat" ? (
         <ChatTab lakeSlug={slug} isActive={activeTab === "chat"} />
       ) : (

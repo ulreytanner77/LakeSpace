@@ -13,11 +13,15 @@ export async function GET(request: NextRequest) {
   try {
     const sql = getSQL();
     const rows = await sql`
-      SELECT id, lake_slug, image_url, caption, tags, activity, created_at, expires_at
-      FROM posts
-      WHERE lake_slug = ${lake}
-        AND expires_at > now()
-      ORDER BY created_at DESC
+      SELECT
+        p.id, p.lake_slug, p.image_url, p.caption, p.tags, p.activity, p.created_at, p.expires_at, p.trip_id,
+        t.activity AS trip_activity, t.planned_date AS trip_planned_date,
+        t.group_size AS trip_group_size, t.join_count AS trip_join_count
+      FROM posts p
+      LEFT JOIN trips t ON p.trip_id = t.id
+      WHERE p.lake_slug = ${lake}
+        AND p.expires_at > now()
+      ORDER BY p.created_at DESC
       LIMIT 50
     `;
     return NextResponse.json(rows);
@@ -33,7 +37,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { lake_slug, image_url, caption, tags, activity } = body;
+    const { lake_slug, image_url, caption, tags, activity, trip_id } = body;
 
     if (!lake_slug || !image_url) {
       return NextResponse.json(
@@ -44,12 +48,13 @@ export async function POST(request: NextRequest) {
 
     const safeTags = Array.isArray(tags) ? tags : [];
     const safeActivity = typeof activity === "string" ? activity : null;
+    const safeTripId = typeof trip_id === "number" ? trip_id : null;
 
     const sql = getSQL();
     const rows = await sql`
-      INSERT INTO posts (lake_slug, image_url, caption, tags, activity, expires_at)
-      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags}, ${safeActivity}, now() + INTERVAL '7 days')
-      RETURNING id, lake_slug, image_url, caption, tags, activity, created_at, expires_at
+      INSERT INTO posts (lake_slug, image_url, caption, tags, activity, trip_id, expires_at)
+      VALUES (${lake_slug}, ${image_url}, ${caption || null}, ${safeTags}, ${safeActivity}, ${safeTripId}, now() + INTERVAL '7 days')
+      RETURNING id, lake_slug, image_url, caption, tags, activity, trip_id, created_at, expires_at
     `;
 
     return NextResponse.json(rows[0], { status: 201 });

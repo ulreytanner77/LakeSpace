@@ -1,5 +1,11 @@
 import Image from "next/image";
 
+interface LinkedTrip {
+  activity: string;
+  planned_date: string;
+  total_going: number;
+}
+
 interface Post {
   id: string;
   lake_slug: string;
@@ -8,6 +14,7 @@ interface Post {
   tags: string[];
   activity: string | null;
   created_at: string;
+  trip?: LinkedTrip | null;
 }
 
 const TAG_COLORS: Record<string, string> = {
@@ -25,7 +32,12 @@ const ACTIVITY_ICONS: Record<string, string> = {
   boating: "⛵",
 };
 
-export default function PostCard({ post, onDelete }: { post: Post; onDelete?: () => void }) {
+function formatTripDate(dateStr: string): string {
+  const date = new Date(dateStr + "T00:00:00");
+  return date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+}
+
+export default function PostCard({ post, onDelete, onViewTrip }: { post: Post; onDelete?: () => void; onViewTrip?: () => void }) {
   const date = new Date(post.created_at);
   const timeAgo = getTimeAgo(date);
 
@@ -62,6 +74,27 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
                 {tag}
               </span>
             ))}
+          </div>
+        )}
+        {post.trip && (
+          <div className="flex items-center gap-2 mb-2 px-2.5 py-1.5 rounded-full bg-lake-500/10 border border-lake-500/20 w-fit">
+            <span className="text-xs">{ACTIVITY_ICONS[post.trip.activity] || "🌊"}</span>
+            <span className="text-xs text-lake-600 capitalize">{post.trip.activity}</span>
+            <span className="text-xs text-sand-300">•</span>
+            <span className="text-xs text-lake-600">{formatTripDate(post.trip.planned_date)}</span>
+            <span className="text-xs text-sand-300">•</span>
+            <span className="text-xs text-lake-600">{post.trip.total_going} going</span>
+            {onViewTrip && (
+              <>
+                <span className="text-xs text-sand-300">•</span>
+                <button
+                  onClick={onViewTrip}
+                  className="text-xs font-medium text-lake-500 hover:text-lake-600 transition-colors"
+                >
+                  View Trip
+                </button>
+              </>
+            )}
           </div>
         )}
         <div className="flex items-center justify-between">
