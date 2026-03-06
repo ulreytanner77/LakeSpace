@@ -13,7 +13,7 @@ export async function PATCH(
       UPDATE trips
       SET join_count = join_count + 1
       WHERE id = ${id}
-      RETURNING id, lake_slug, activity, description, planned_date, group_size, join_count, created_at, expires_at
+      RETURNING id, lake_slug, activity, description, planned_date, planned_time, group_size, join_count, created_at, expires_at
     `;
 
     if (rows.length === 0) {

@@ -10,6 +10,7 @@ interface Trip {
   activity: string;
   description: string | null;
   planned_date: string;
+  planned_time: string | null;
   group_size: number;
   join_count: number;
   created_at: string;

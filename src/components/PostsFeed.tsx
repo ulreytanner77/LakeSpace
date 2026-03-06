@@ -7,6 +7,7 @@ import NewPostForm from "./NewPostForm";
 interface LinkedTrip {
   activity: string;
   planned_date: string;
+  planned_time: string | null;
   total_going: number;
 }
 
@@ -32,6 +33,7 @@ interface RawPost {
   trip_id: number | null;
   trip_activity: string | null;
   trip_planned_date: string | null;
+  trip_planned_time: string | null;
   trip_group_size: number | null;
   trip_join_count: number | null;
 }
@@ -49,6 +51,7 @@ function mapPost(raw: RawPost): Post {
       ? {
           activity: raw.trip_activity,
           planned_date: raw.trip_planned_date,
+          planned_time: raw.trip_planned_time || null,
           total_going: (raw.trip_group_size || 1) + (raw.trip_join_count || 0),
         }
       : null,

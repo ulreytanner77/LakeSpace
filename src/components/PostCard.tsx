@@ -3,6 +3,7 @@ import Image from "next/image";
 interface LinkedTrip {
   activity: string;
   planned_date: string;
+  planned_time: string | null;
   total_going: number;
 }
 
@@ -32,9 +33,14 @@ const ACTIVITY_ICONS: Record<string, string> = {
   boating: "⛵",
 };
 
-function formatTripDate(dateStr: string): string {
-  const date = new Date(dateStr + "T00:00:00");
-  return date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+function formatTripDateTime(dateStr: string, timeStr: string | null): string {
+  const date = new Date(dateStr);
+  const dayPart = date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+  if (!timeStr) return dayPart;
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h = hours % 12 || 12;
+  return `${dayPart} • ${h}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 }
 
 export default function PostCard({ post, onDelete, onViewTrip }: { post: Post; onDelete?: () => void; onViewTrip?: () => void }) {
@@ -81,7 +87,7 @@ export default function PostCard({ post, onDelete, onViewTrip }: { post: Post; o
             <span className="text-xs">{ACTIVITY_ICONS[post.trip.activity] || "🌊"}</span>
             <span className="text-xs text-lake-600 capitalize">{post.trip.activity}</span>
             <span className="text-xs text-sand-300">•</span>
-            <span className="text-xs text-lake-600">{formatTripDate(post.trip.planned_date)}</span>
+            <span className="text-xs text-lake-600">{formatTripDateTime(post.trip.planned_date, post.trip.planned_time)}</span>
             <span className="text-xs text-sand-300">•</span>
             <span className="text-xs text-lake-600">{post.trip.total_going} going</span>
             {onViewTrip && (

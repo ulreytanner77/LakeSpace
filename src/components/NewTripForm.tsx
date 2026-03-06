@@ -13,6 +13,7 @@ export default function NewTripForm({ lakeSlug, onCreated }: NewTripFormProps) {
   const [activity, setActivity] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [plannedDate, setPlannedDate] = useState("");
+  const [plannedTime, setPlannedTime] = useState("");
   const [groupSize, setGroupSize] = useState(1);
   const [status, setStatus] = useState<"idle" | "posting" | "error">("idle");
   const [error, setError] = useState("");
@@ -35,6 +36,7 @@ export default function NewTripForm({ lakeSlug, onCreated }: NewTripFormProps) {
           activity,
           description: description || null,
           planned_date: plannedDate,
+          planned_time: plannedTime || null,
           group_size: groupSize,
         }),
       });
@@ -47,6 +49,7 @@ export default function NewTripForm({ lakeSlug, onCreated }: NewTripFormProps) {
       setActivity(null);
       setDescription("");
       setPlannedDate("");
+      setPlannedTime("");
       setGroupSize(1);
       setStatus("idle");
 
@@ -102,6 +105,14 @@ export default function NewTripForm({ lakeSlug, onCreated }: NewTripFormProps) {
           required
           className="flex-1 rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent"
           disabled={isSubmitting}
+        />
+        <input
+          type="time"
+          value={plannedTime}
+          onChange={(e) => setPlannedTime(e.target.value)}
+          className="w-28 rounded-lg border border-sand-200 bg-sand-50 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-forest-500/40 focus:border-transparent"
+          disabled={isSubmitting}
+          placeholder="Time"
         />
         <input
           type="number"

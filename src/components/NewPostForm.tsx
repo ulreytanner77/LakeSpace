@@ -187,7 +187,7 @@ export default function NewPostForm({ lakeSlug, onPosted, activityCounts }: NewP
           <option value="">Link a trip (optional)</option>
           {availableTrips.map((t) => (
             <option key={t.id} value={t.id}>
-              {ACTIVITY_ICONS[t.activity] || "🌊"} {t.activity} — {new Date(t.planned_date + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
+              {ACTIVITY_ICONS[t.activity] || "🌊"} {t.activity} — {new Date(t.planned_date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
             </option>
           ))}
         </select>

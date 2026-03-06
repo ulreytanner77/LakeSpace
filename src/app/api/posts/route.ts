@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const rows = await sql`
       SELECT
         p.id, p.lake_slug, p.image_url, p.caption, p.tags, p.activity, p.created_at, p.expires_at, p.trip_id,
-        t.activity AS trip_activity, t.planned_date AS trip_planned_date,
+        t.activity AS trip_activity, t.planned_date AS trip_planned_date, t.planned_time AS trip_planned_time,
         t.group_size AS trip_group_size, t.join_count AS trip_join_count
       FROM posts p
       LEFT JOIN trips t ON p.trip_id = t.id

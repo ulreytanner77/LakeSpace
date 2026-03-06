@@ -8,6 +8,7 @@ interface Trip {
   activity: string;
   description: string | null;
   planned_date: string;
+  planned_time: string | null;
   group_size: number;
   join_count: number;
   created_at: string;
@@ -21,9 +22,14 @@ const ACTIVITY_ICONS: Record<string, string> = {
   boating: "⛵",
 };
 
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr + "T00:00:00");
-  return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+function formatDateTime(dateStr: string, timeStr: string | null): string {
+  const date = new Date(dateStr);
+  const dayPart = date.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+  if (!timeStr) return dayPart;
+  const [hours, minutes] = timeStr.split(":").map(Number);
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const h = hours % 12 || 12;
+  return `${dayPart} • ${h}:${minutes.toString().padStart(2, "0")} ${ampm}`;
 }
 
 export default function TripCard({ trip, onDelete }: { trip: Trip; onDelete?: () => void }) {
@@ -59,7 +65,7 @@ export default function TripCard({ trip, onDelete }: { trip: Trip; onDelete?: ()
       )}
 
       <div className="flex items-center gap-3 text-xs text-sand-400 mb-3">
-        <span>{formatDate(trip.planned_date)}</span>
+        <span>{formatDateTime(trip.planned_date, trip.planned_time)}</span>
         <span>{totalGoing} {totalGoing === 1 ? "person" : "people"} heading out</span>
       </div>
 
