@@ -6,6 +6,7 @@ interface Post {
   image_url: string;
   caption: string | null;
   tags: string[];
+  activity: string | null;
   created_at: string;
 }
 
@@ -14,6 +15,14 @@ const TAG_COLORS: Record<string, string> = {
   glassy: "bg-forest-500/15 text-forest-600",
   choppy: "bg-sunset-500/15 text-sunset-600",
   crowded: "bg-sand-300/40 text-sand-400",
+};
+
+const ACTIVITY_ICONS: Record<string, string> = {
+  fishing: "🎣",
+  paddleboarding: "🏄",
+  swimming: "🏊",
+  kayaking: "🛶",
+  boating: "⛵",
 };
 
 export default function PostCard({ post, onDelete }: { post: Post; onDelete?: () => void }) {
@@ -32,6 +41,12 @@ export default function PostCard({ post, onDelete }: { post: Post; onDelete?: ()
         />
       </div>
       <div className="p-4">
+        {post.activity && (
+          <div className="flex items-center gap-1.5 mb-2">
+            <span className="text-sm">{ACTIVITY_ICONS[post.activity] || "🌊"}</span>
+            <span className="text-xs font-semibold text-lake-600 capitalize">{post.activity}</span>
+          </div>
+        )}
         {post.caption && (
           <p className="text-stone-700 text-sm mb-2">{post.caption}</p>
         )}
