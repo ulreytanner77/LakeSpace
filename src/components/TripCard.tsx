@@ -56,19 +56,20 @@ export default function TripCard({ trip, onDelete }: { trip: Trip; onDelete?: ()
 
   return (
     <div id={`trip-${trip.id}`} className="rounded-2xl border border-sand-200 bg-sand-100 p-4 shadow-sm animate-fade-in">
-      <div className="flex items-center gap-1.5 mb-2">
+      <div className="flex items-center gap-1.5">
         <span className="text-sm">{ACTIVITY_ICONS[trip.activity] || "🌊"}</span>
         <span className="text-xs font-semibold text-lake-600 capitalize">{trip.activity}</span>
       </div>
 
       {trip.description && (
-        <p className="text-stone-700 text-sm mb-2">{trip.description}</p>
+        <p className="text-stone-700 text-sm mt-1">{trip.description}</p>
       )}
 
-      <div className="flex items-center gap-3 text-xs text-sand-400 mb-3">
-        <span>{formatDateTime(trip.planned_date, trip.planned_time)}</span>
-        <span>{totalGoing} {totalGoing === 1 ? "person" : "people"} heading out</span>
-      </div>
+      <p className="text-xs text-sand-400 mt-1 mb-3">
+        {formatDateTime(trip.planned_date, trip.planned_time)}
+        <span className="mx-1">•</span>
+        {totalGoing} going
+      </p>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
