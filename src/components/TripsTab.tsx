@@ -88,8 +88,6 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
         </div>
       )}
 
-      <NewTripForm lakeSlug={lakeSlug} onCreated={fetchTrips} />
-
       {loading && (
         <p className="text-sm text-sand-300 text-center py-8">
           Loading trips...
@@ -127,6 +125,8 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
           />
         ))}
       </div>
+
+      <NewTripForm lakeSlug={lakeSlug} onCreated={fetchTrips} />
     </div>
   );
 }
