@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const sql = getSQL();
     const rows = await sql`
-      SELECT id, lake_slug, activity, description, planned_date, planned_time, group_size, join_count, created_at, expires_at
+      SELECT *
       FROM trips
       WHERE lake_slug = ${lake}
         AND expires_at > now()
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     const rows = await sql`
       INSERT INTO trips (lake_slug, activity, description, planned_date, planned_time, group_size, expires_at)
       VALUES (${lake_slug}, ${activity}, ${description || null}, ${planned_date}, ${safePlannedTime}, ${safeGroupSize}, ${planned_date}::date + INTERVAL '1 day')
-      RETURNING id, lake_slug, activity, description, planned_date, planned_time, group_size, join_count, created_at, expires_at
+      RETURNING *
     `;
 
     return NextResponse.json(rows[0], { status: 201 });
