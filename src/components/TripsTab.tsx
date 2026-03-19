@@ -3,6 +3,16 @@
 import { useState, useEffect, useCallback } from "react";
 import TripCard from "./TripCard";
 import NewTripForm from "./NewTripForm";
+import FilterPills from "./FilterPills";
+
+const ACTIVITY_OPTIONS = ["fishing", "paddleboarding", "swimming", "kayaking", "boating"];
+const ACTIVITY_ICONS: Record<string, string> = {
+  fishing: "🎣",
+  paddleboarding: "🏄",
+  swimming: "🏊",
+  kayaking: "🛶",
+  boating: "⛵",
+};
 
 interface Trip {
   id: string;
@@ -13,6 +23,7 @@ interface Trip {
   planned_time: string | null;
   group_size: number;
   join_count: number;
+  status?: string;
   created_at: string;
 }
 
@@ -20,10 +31,13 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activityFilter, setActivityFilter] = useState<string | null>(null);
 
   const fetchTrips = useCallback(async () => {
     try {
-      const res = await fetch(`/api/trips?lake=${lakeSlug}`);
+      let url = `/api/trips?lake=${lakeSlug}`;
+      if (activityFilter) url += `&activity=${activityFilter}`;
+      const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch trips");
       const data = await res.json();
       setTrips(data);
@@ -33,7 +47,7 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
     } finally {
       setLoading(false);
     }
-  }, [lakeSlug]);
+  }, [lakeSlug, activityFilter]);
 
   useEffect(() => {
     fetchTrips();
@@ -41,6 +55,13 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
 
   return (
     <div className="space-y-4">
+      <FilterPills
+        options={ACTIVITY_OPTIONS}
+        selected={activityFilter}
+        onChange={setActivityFilter}
+        icons={ACTIVITY_ICONS}
+      />
+
       {!loading && trips.length > 0 && (
         <h3 className="text-xs font-semibold text-forest-600 uppercase tracking-wide">
           Upcoming Trips{lakeName ? ` at ${lakeName}` : ""}
@@ -68,6 +89,7 @@ export default function TripsTab({ lakeSlug, lakeName }: { lakeSlug: string; lak
           <TripCard
             key={trip.id}
             trip={trip}
+            onUpdate={fetchTrips}
             onDelete={async () => {
               if (!confirm("Delete this trip?")) return;
               try {

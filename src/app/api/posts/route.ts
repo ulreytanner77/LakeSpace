@@ -10,6 +10,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  const activity = request.nextUrl.searchParams.get("activity");
+  const tag = request.nextUrl.searchParams.get("tag");
+
   try {
     const sql = getSQL();
     const rows = await sql`
@@ -21,6 +24,8 @@ export async function GET(request: NextRequest) {
       LEFT JOIN trips t ON p.trip_id = t.id
       WHERE p.lake_slug = ${lake}
         AND p.expires_at > now()
+        ${activity ? sql`AND p.activity = ${activity}` : sql``}
+        ${tag ? sql`AND ${tag} = ANY(p.tags)` : sql``}
       ORDER BY p.created_at DESC
       LIMIT 50
     `;

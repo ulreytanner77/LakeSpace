@@ -3,6 +3,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import PostCard from "./PostCard";
 import NewPostForm from "./NewPostForm";
+import FilterPills from "./FilterPills";
+
+const ACTIVITY_OPTIONS = ["fishing", "paddleboarding", "swimming", "kayaking", "boating"];
+const ACTIVITY_ICONS: Record<string, string> = {
+  fishing: "🎣",
+  paddleboarding: "🏄",
+  swimming: "🏊",
+  kayaking: "🛶",
+  boating: "⛵",
+};
 
 interface LinkedTrip {
   activity: string;
@@ -62,10 +72,15 @@ export default function PostsFeed({ lakeSlug, onSwitchToTrips }: { lakeSlug: str
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activityFilter, setActivityFilter] = useState<string | null>(null);
+  const [tagFilter, setTagFilter] = useState<string | null>(null);
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await fetch(`/api/posts?lake=${lakeSlug}`);
+      let url = `/api/posts?lake=${lakeSlug}`;
+      if (activityFilter) url += `&activity=${activityFilter}`;
+      if (tagFilter) url += `&tag=${tagFilter}`;
+      const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch posts");
       const data: RawPost[] = await res.json();
       setPosts(data.map(mapPost));
@@ -75,7 +90,7 @@ export default function PostsFeed({ lakeSlug, onSwitchToTrips }: { lakeSlug: str
     } finally {
       setLoading(false);
     }
-  }, [lakeSlug]);
+  }, [lakeSlug, activityFilter, tagFilter]);
 
   useEffect(() => {
     fetchPosts();
@@ -91,9 +106,34 @@ export default function PostsFeed({ lakeSlug, onSwitchToTrips }: { lakeSlug: str
     return counts;
   }, [posts]);
 
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    for (const post of posts) {
+      for (const tag of post.tags) {
+        tagSet.add(tag);
+      }
+    }
+    return Array.from(tagSet).sort();
+  }, [posts]);
+
   return (
     <div className="space-y-4">
       <NewPostForm lakeSlug={lakeSlug} onPosted={fetchPosts} activityCounts={activityCounts} />
+
+      <FilterPills
+        options={ACTIVITY_OPTIONS}
+        selected={activityFilter}
+        onChange={setActivityFilter}
+        icons={ACTIVITY_ICONS}
+      />
+
+      {allTags.length > 0 && (
+        <FilterPills
+          options={allTags}
+          selected={tagFilter}
+          onChange={setTagFilter}
+        />
+      )}
 
       {loading && (
         <p className="text-sm text-sand-300 text-center py-8">

@@ -10,6 +10,7 @@ import ChatTab from "@/components/ChatTab";
 import TripsTab from "@/components/TripsTab";
 import LiveActivity from "@/components/LiveActivity";
 import ActivityThisWeek from "@/components/ActivityThisWeek";
+import RecentActivity from "@/components/RecentActivity";
 
 export default function LakePage() {
   const params = useParams();
@@ -51,6 +52,8 @@ export default function LakePage() {
       <ActivityThisWeek lakeSlug={slug} />
 
       <LiveActivity lakeSlug={slug} />
+
+      <RecentActivity lakeSlug={slug} />
 
       <Tabs active={activeTab} onChange={setActiveTab} />
 

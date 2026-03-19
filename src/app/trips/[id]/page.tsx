@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getLakeBySlug } from "@/lib/lakes";
+import TripChat from "@/components/TripChat";
 
 interface Trip {
   id: string;
@@ -13,6 +14,7 @@ interface Trip {
   planned_time: string | null;
   group_size: number;
   join_count: number;
+  status?: string;
 }
 
 const ACTIVITY_ICONS: Record<string, string> = {
@@ -105,7 +107,13 @@ export default function SharedTripPage({ params }: { params: { id: string } }) {
         &larr; {lakeName}
       </Link>
 
-      <div className="rounded-2xl border border-sand-200 bg-sand-100 p-6 shadow-sm">
+      <div className={`rounded-2xl border border-sand-200 bg-sand-100 p-6 shadow-sm ${trip.status === "cancelled" ? "opacity-60" : ""}`}>
+        {trip.status === "cancelled" && (
+          <div className="mb-3 text-center text-sm font-bold text-red-500 bg-red-50 rounded-full py-1">
+            This trip has been cancelled
+          </div>
+        )}
+
         <p className="text-xs text-sand-300 uppercase tracking-wide mb-1">{lakeName}</p>
 
         <div className="flex items-center gap-2 mb-3">
@@ -123,7 +131,11 @@ export default function SharedTripPage({ params }: { params: { id: string } }) {
           <span>{totalGoing} {totalGoing === 1 ? "person" : "people"} going</span>
         </div>
 
-        {joined ? (
+        {trip.status === "cancelled" ? (
+          <div className="w-full rounded-full bg-sand-200 px-4 py-2.5 text-sm font-medium text-sand-400 text-center">
+            Trip Cancelled
+          </div>
+        ) : joined ? (
           <div className="w-full rounded-full bg-forest-500 px-4 py-2.5 text-sm font-medium text-white text-center">
             You&apos;re in! See you there
           </div>
@@ -137,6 +149,8 @@ export default function SharedTripPage({ params }: { params: { id: string } }) {
           </button>
         )}
       </div>
+
+      {joined && <TripChat tripId={params.id} />}
     </div>
   );
 }

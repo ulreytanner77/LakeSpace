@@ -11,15 +11,27 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const activity = request.nextUrl.searchParams.get("activity");
+
     const sql = getSQL();
-    const rows = await sql`
-      SELECT *
-      FROM trips
-      WHERE lake_slug = ${lake}
-        AND expires_at > now()
-      ORDER BY planned_date ASC
-      LIMIT 50
-    `;
+    const rows = activity
+      ? await sql`
+          SELECT *
+          FROM trips
+          WHERE lake_slug = ${lake}
+            AND expires_at > now()
+            AND activity = ${activity}
+          ORDER BY planned_date ASC
+          LIMIT 50
+        `
+      : await sql`
+          SELECT *
+          FROM trips
+          WHERE lake_slug = ${lake}
+            AND expires_at > now()
+          ORDER BY planned_date ASC
+          LIMIT 50
+        `;
     return NextResponse.json(rows);
   } catch (error) {
     console.error("GET /api/trips error:", error);

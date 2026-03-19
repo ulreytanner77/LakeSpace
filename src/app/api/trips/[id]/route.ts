@@ -38,18 +38,55 @@ export async function PATCH(
 ) {
   const { id } = params;
 
-  let name: string | null = null;
+  let body: Record<string, unknown> = {};
   try {
-    const body = await request.json();
-    name = typeof body.name === "string" ? body.name : null;
+    body = await request.json();
   } catch {
-    // body is optional — name defaults to null
+    // body is optional for join
   }
+
+  const action = typeof body.action === "string" ? body.action : "join";
 
   try {
     const sql = getSQL();
 
-    // Increment join count
+    if (action === "cancel") {
+      const rows = await sql`
+        UPDATE trips
+        SET status = 'cancelled'
+        WHERE id = ${id}
+        RETURNING *
+      `;
+      if (rows.length === 0) {
+        return NextResponse.json({ error: "Trip not found" }, { status: 404 });
+      }
+      return NextResponse.json(rows[0]);
+    }
+
+    if (action === "edit") {
+      const planned_date = typeof body.planned_date === "string" ? body.planned_date : null;
+      const planned_time = typeof body.planned_time === "string" ? body.planned_time : null;
+      const description = body.description !== undefined ? body.description : undefined;
+
+      const rows = await sql`
+        UPDATE trips
+        SET
+          planned_date = COALESCE(${planned_date}, planned_date),
+          planned_time = COALESCE(${planned_time}, planned_time),
+          description = COALESCE(${description !== undefined ? (description as string | null) : null}, description),
+          expires_at = COALESCE(${planned_date}, planned_date::text)::date + INTERVAL '1 day'
+        WHERE id = ${id}
+        RETURNING *
+      `;
+      if (rows.length === 0) {
+        return NextResponse.json({ error: "Trip not found" }, { status: 404 });
+      }
+      return NextResponse.json(rows[0]);
+    }
+
+    // Default: join
+    const name = typeof body.name === "string" ? body.name : null;
+
     const rows = await sql`
       UPDATE trips
       SET join_count = join_count + 1
@@ -94,7 +131,7 @@ export async function PATCH(
   } catch (error) {
     console.error("PATCH /api/trips/[id] error:", error);
     return NextResponse.json(
-      { error: "Failed to join trip" },
+      { error: "Failed to update trip" },
       { status: 500 }
     );
   }
