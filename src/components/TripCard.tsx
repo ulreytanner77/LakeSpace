@@ -121,69 +121,69 @@ export default function TripCard({ trip, onDelete, onUpdate }: { trip: Trip; onD
         {totalGoing} going
       </p>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleJoin}
-            disabled={joining || isCancelled}
-            className="bg-lake-500 text-white text-sm font-medium px-4 py-1.5 rounded-full hover:bg-lake-600 active:scale-95 disabled:opacity-50 transition-all"
-          >
-            Join ({joinCount} going)
-          </button>
-          <a
-            href={`/trips/${trip.id}`}
-            className="text-xs text-forest-500 hover:text-forest-600 font-medium transition-colors"
-          >
-            Group Chat
-          </a>
-          <button
-            onClick={() => {
-              const url = `${window.location.origin}/trips/${trip.id}`;
-              navigator.clipboard.writeText(url).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-              });
-            }}
-            className="text-xs text-lake-500 hover:text-lake-600 transition-colors"
-          >
-            {copied ? "Link copied!" : "Share"}
-          </button>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {!isCancelled && (
-            <>
-              <button
-                onClick={() => setEditing(!editing)}
-                className="text-xs text-lake-500 hover:text-lake-600 transition-colors"
-              >
-                Edit
-              </button>
-              <button
-                onClick={handleCancel}
-                className="text-xs text-red-400 hover:text-red-600 transition-colors"
-              >
-                Cancel
-              </button>
-            </>
-          )}
-          {onDelete && (
-            <button
-              onClick={onDelete}
-              className="text-xs text-red-400 hover:text-red-600 transition-colors"
-            >
-              Delete
-            </button>
-          )}
-        </div>
+      <div className="flex items-center gap-2 mb-2">
+        <button
+          onClick={handleJoin}
+          disabled={joining || isCancelled}
+          className="bg-lake-500 text-white text-sm font-medium px-4 py-1.5 rounded-full hover:bg-lake-600 active:scale-95 disabled:opacity-50 transition-all"
+        >
+          Join ({joinCount} going)
+        </button>
       </div>
 
-      <button
-        onClick={toggleParticipants}
-        className="text-xs text-sand-400 hover:text-lake-500 mt-2 transition-colors"
-      >
-        {showParticipants ? "Hide" : "Who's going?"}
-      </button>
+      <div className="flex items-center gap-1.5 flex-wrap border-t border-sand-200 pt-2">
+        <a
+          href={`/trips/${trip.id}`}
+          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-forest-500/10 text-forest-600 hover:bg-forest-500/20 transition-colors"
+        >
+          <span>💬</span> Chat
+        </a>
+        <button
+          onClick={() => {
+            const url = `${window.location.origin}/trips/${trip.id}`;
+            navigator.clipboard.writeText(url).then(() => {
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            });
+          }}
+          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-lake-500/10 text-lake-600 hover:bg-lake-500/20 transition-colors"
+        >
+          <span>🔗</span> {copied ? "Copied!" : "Share"}
+        </button>
+        <button
+          onClick={toggleParticipants}
+          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-sand-200/60 text-sand-400 hover:bg-sand-200 hover:text-stone-600 transition-colors"
+        >
+          <span>👥</span> {showParticipants ? "Hide" : "Who's going?"}
+        </button>
+
+        <span className="flex-1" />
+
+        {!isCancelled && (
+          <>
+            <button
+              onClick={() => setEditing(!editing)}
+              className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-sand-200/60 text-sand-400 hover:bg-lake-500/10 hover:text-lake-600 transition-colors"
+            >
+              ✏️ Edit
+            </button>
+            <button
+              onClick={handleCancel}
+              className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+            >
+              ✕ Cancel
+            </button>
+          </>
+        )}
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+          >
+            🗑️ Delete
+          </button>
+        )}
+      </div>
 
       {showParticipants && (
         <div className="mt-1.5 text-xs text-stone-600 space-y-0.5">
